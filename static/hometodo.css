@@ -1,0 +1,23 @@
+.parent{
+    min-height: 90vh;
+    overflow-x: hidden;
+}
+td a{
+    text-decoration: none;
+    color: unset;
+}
+
+.show-in-small-devices{
+    display: none !important;
+}
+tr:hover{
+    background-color: #ff56;
+}
+@media(max-width:999px){
+    .hide-in-small-devices{
+        display: none;
+    }
+    .show-in-small-devices{
+        display: block !important;
+    }
+}

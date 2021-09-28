@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block styleLink %}<link rel="stylesheet" href="/static/hometodo.css">{% endblock styleLink %}
+{% block title %}Flask Todo | Home{% endblock title %}
+
+{% block body %}
+<div class="parent container">
+
+<!--Add Todo-->
+<div class="add-todo">
+<form class="my-4" action="/" method="POST">
+    <h1 class="py-4" data-aos="fade-right" data-aos-duration="800">Add a Todo</h1>
+    <div class="mb-3">
+      <label class="form-label">Title</label>
+      <input name="title" type="text" class="form-control" autocomplete="off" autocapitalize="on" required="true" placeholder="Enter Todo Title Here">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <input name="description" class="form-control" autocomplete="off" required="true" placeholder="Enter Todo Description Here">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+<!--Add Todo-->
+
+{% if allTodo %}
+
+<h1 class="pt-4 pb-0" data-aos="fade-right" data-aos-duration="800">Your Todos</h1>
+<!-- Tables For Bigger Devices -->
+<table class="table hide-in-small-devices my-4  table-borderless" class="todo-list">
+    <thead>
+      <tr style="text-align: center;background: #1525ff36;">
+        <th scope="col">Task</th>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Time Stamp</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {% for todo in allTodo %}
+      <tr style="text-align: center;"  data-aos="fade-{% if loop.index % 2 == 0 %}right{% else %}left{% endif %}" data-aos-duration="500">
+        <th scope="row">{{loop.index}}</th>
+        <td style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-title="{{todo.title}}" data-bs-desc="{{todo.description}}">{{todo.title}}</td>
+        <td class="text-truncate" style="max-width:200px;cursor: pointer;"  data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-title="{{todo.title}}" data-bs-desc="{{todo.description}}">{{todo.description}}</td>
+        <td>{{todo.date_created}}</td>
+        <td>
+            <a href="/update/{{todo.pk}}"> <button type="button" class="btn btn-success  m-1 btn-sm">Update</button> </a>
+            <a href="/delete/{{todo.pk}}"> <button type="button" class="btn btn-danger m-1 btn-sm">Delete</button> </a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<!-- Tables For Bigger Devices -->
+
+<!-- Accordions For Smaller Devices -->
+<div class="accordion show-in-small-devices my-5 mt-4" id="accordionExample">
+{% for todo in allTodo %}
+  <div class="accordion-item" data-aos="fade-{% if loop.index % 2 == 0 %}right{% else %}left{% endif %}" data-aos-duration="500">
+    <h2 class="accordion-header" id="heading{{todo.pk}}">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{todo.pk}}" aria-expanded="false" aria-controls="collapse{{todo.pk}}">
+       <strong> {{loop.index}}. {{todo.title}} </strong>
+      </button>
+    </h2>
+    <div id="collapse{{todo.pk}}" class="accordion-collapse collapse" aria-labelledby="heading{{todo.pk}}" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+      <strong> Time Created : </strong> {{todo.date_created}}
+      <br>
+      <br>
+      <strong> Description : </strong> {{todo.description}}
+      <br>
+        <a href="/update/{{todo.pk}}" style="text-decoration:none;"> <button type="button" class="btn btn-success  m-2 mt-4 btn-sm">Update</button> </a>
+        <a href="/delete/{{todo.pk}}" style="text-decoration:none;"> <button type="button" class="btn btn-danger   m-2 mt-4 btn-sm">Delete</button> </a>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+<!-- Accordions For Smaller Devices -->
+
+{% else %}
+
+<h1 style="text-align: center;">No todo present <br><br> Please make one !</h1>
+
+{% endif %}
+
+<!--Modals For Todos for Bigger Screens Only-->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><!--The title will be printed here !--></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pb-5">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<!--Modal Scripts-->
+<script>
+var exampleModal = document.getElementById('exampleModal')
+exampleModal.addEventListener('show.bs.modal', function (event) {
+  var button = event.relatedTarget
+  var title = button.getAttribute('data-bs-title')
+  var desc = button.getAttribute('data-bs-desc')
+  var modalTitle = exampleModal.querySelector('.modal-title')
+  var modalBodyInput = exampleModal.querySelector('.modal-body')
+  modalTitle.textContent = title
+  modalBodyInput.textContent = desc
+})
+</script>
+<!--Modal Scripts-->
+<!--Modals For Todos for Bigger Screens Only-->
+<br>
+<br>
+<br>
+</div>
+
+{% endblock body %}
